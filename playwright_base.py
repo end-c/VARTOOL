@@ -54,3 +54,5 @@ with sync_playwright() as p:
     context.close()
 
 
+# Copy-Item -Path "C:\chromenew1\*" -Destination "C:\chromenew1_copy" -Recurse -Force
+# 或者robocopy "C:\chromenew1" "C:\chromenew1_copy" /E /COPYALL /R:1 /W:1 /XJ
