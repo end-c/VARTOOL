@@ -92,14 +92,16 @@
         "提交按钮"
     );
 
+    // 首单（失败则终止）
+    if (!submitBtn) log.err("首单按钮为 disabled");
+
     const isBuy = submitBtn.innerText.includes("Buy");
     const first = isBuy ? "Buy" : "Sell";
     const second = isBuy ? "Sell" : "Buy";
 
     log.info(`当前方向：${first}`);
 
-    // 首单（失败则终止）
-    if (submitBtn.disabled) log.err("首单按钮为 disabled");
+
 
     click(submitBtn);
     log.ok(`${first} 已提交`);
