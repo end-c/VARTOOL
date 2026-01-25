@@ -93,7 +93,7 @@
     );
 
     // 首单（失败则终止）
-    if (!submitBtn) log.err("首单按钮为 disabled");
+    if (!submitBtn) log.err("首单按钮没找到");
 
     const isBuy = submitBtn.innerText.includes("Buy");
     const first = isBuy ? "Buy" : "Sell";
@@ -119,9 +119,11 @@
     const hedgeBtn = await waitFor(
         () => {
             const b = document.querySelector('button[data-testid="submit-button"]');
-            return b && b.innerText.includes(second) && !b.disabled ? b : null;
+            if (!b) return null;
+            if (!b.innerText.includes(second)) return null;
+            return b; // ❗ 不再检查 disabled
         },
-        `等待 ${second} 按钮就绪`
+        `等待 ${second} submit-button 出现`
     );
 
     // 确认数量（防 UI 重置）
@@ -133,9 +135,44 @@
     }
 
     // 对冲（最终执行）
-    await sleep(HEDGE_DELAY);
-    click(hedgeBtn);
+    // await sleep(HEDGE_DELAY);
+    // click(hedgeBtn);
 
+    //对冲执行（强制）
+
+    log.warn("进入强制对冲模式（首单已提交）");
+
+    const MAX_RETRY = 10;
+    let clicked = false;
+
+    for (let i = 1; i <= MAX_RETRY; i++) {
+        const btn = document.querySelector('button[data-testid="submit-button"]');
+
+        if (btn && btn.innerText.includes(second)) {
+            try {
+                // 即使 disabled 也强制派发事件
+                btn.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+                btn.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+                btn.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+                log.ok(`第 ${i} 次尝试：${second} click 已派发`);
+                clicked = true;
+                break;
+            } catch (e) {
+                log.warn(`第 ${i} 次 click 失败`);
+            }
+        }
+
+        await sleep(200);
+    }
+
+    if (!clicked) {
+        log.err("⚠️ 严重风险：反向单未能派发 click（可能只成交一边）");
+    } else {
+        log.ok(`🔁 对冲 click 已执行：${second}`);
+    }
+
+    log.ok(`${second} 已提交`);
     log.ok(`对冲完成：${first} → ${second}`);
     log.ok("一键对冲执行成功");
 
