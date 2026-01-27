@@ -10,6 +10,17 @@
      ********************/
     const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+    const isVisible = el => {
+    if (!el) return false;
+    const rect = el.getBoundingClientRect();
+    return (
+        rect.width > 0 &&
+        rect.height > 0 &&
+        window.getComputedStyle(el).visibility !== "hidden" &&
+        window.getComputedStyle(el).display !== "none"
+    );
+};
+
     const click = el => {
         if (!el) throw new Error("❌ 找不到元素，无法点击");
         el.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
@@ -126,7 +137,7 @@
     }
 
     // 只比较数值
-    if (qtyInput2.value !== TRADE_QTY) {
+    if (Number(qtyInput2.value) !== Number(TRADE_QTY)) {
         qtyInput2.focus();
         qtyInput2.value = "";
         qtyInput2.dispatchEvent(new Event("input", { bubbles: true }));

@@ -16,6 +16,8 @@ try:
     url = "https://omni.variational.io/perpetual/BTC"
     driver.get(url)
 
+
+
     # WebDriverWait(driver, 20).until(
     #     EC.presence_of_element_located((
     #         By.XPATH, "//span[text()='Buy' or text()='Sell' or text()='Market']"

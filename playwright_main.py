@@ -25,3 +25,4 @@ with sync_playwright() as p:
     page.pause()  # 👈 停下来观察
 
     context.close()
+
