@@ -1,9 +1,8 @@
 (async () => {
-
     // 可配置参数
     const TRADE_QTY = "0.001";   // 交易数量
-    const HEDGE_DELAY = 300;    // 对冲间隔(ms)
-    const WAIT_TIMEOUT = 2000;  // UI 等待超时(ms)
+    const HEDGE_DELAY = 300;     // 对冲间隔(ms)
+    const WAIT_TIMEOUT = 2000;   // UI 等待超时(ms)
 
     // Console 日志样式
     const log = {
@@ -189,6 +188,4 @@
     log.ok(`${second} 已提交`);
     log.ok(`对冲完成：${first} → ${second}`);
     log.ok("一键对冲执行成功");
-
-
 })();
