@@ -15,10 +15,7 @@
     // 循环执行 5 次
     for (let attempt = 1; attempt <= MAX_EXECUTIONS; attempt++) {
         try {
-            log.info(`第 ${attempt} 次执行`);
 
-            // 放置你要执行的代码块，在这里不做改动
-            // 示例代码：开始执行任务
             log.ok(`开始执行第 ${attempt} 次对冲`);
 
             // 可配置参数
@@ -166,6 +163,7 @@
             // 对冲（最终执行）
             log.warn("进入强制对冲模式（首单已提交）");
 
+            const MAX_RETRY = 10;
             let clicked = false;
 
             for (let i = 1; i <= MAX_RETRY; i++) {
