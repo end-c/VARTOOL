@@ -5,7 +5,6 @@
     const HEDGE_DELAY = 300;    // 对冲间隔(ms)
     const WAIT_TIMEOUT = 2000;  // UI 等待超时(ms)
 
-
     // Console 日志样式
     const log = {
         ok: msg => console.log(`%c✔ ${msg}`, "color:#22c55e;font-weight:bold"),
@@ -50,14 +49,49 @@
         [...document.querySelectorAll("button")]
             .find(b => isVisible(b) && !b.disabled && b.innerText.trim().startsWith(side));
 
-    // 校验 Market 
+    /********************
+     * 1. 校验输入框及状态
+     ********************/
+    const qtyInput = await waitFor(
+        () => document.querySelector('input[data-testid="quantity-input"]'),
+        "数量输入框"
+    );
+
+    if (!qtyInput) {
+        log.err("找不到数量输入框");
+        return;
+    }
+
+    // 输出输入框状态
+    console.log("输入框属性：", qtyInput);
+    console.log("输入框是否被禁用：", qtyInput.disabled);
+    console.log("输入框是否只读：", qtyInput.readOnly);
+
+    // 强制移除禁用状态（如果有）
+    qtyInput.disabled = false;
+    qtyInput.readOnly = false;
+
+    // 强制修改输入框的值
+    qtyInput.focus();
+    qtyInput.value = TRADE_QTY;
+
+    // 强制触发 input 和 change 事件，模拟用户操作
+    qtyInput.dispatchEvent(new Event("input", { bubbles: true }));
+    qtyInput.dispatchEvent(new Event("change", { bubbles: true }));
+
+    log.ok(`数量已输入：${TRADE_QTY}`);
+
+    // 校验 Market 模式
     const marketBtn = document.querySelector('[data-testid="toggle-select"] button.border-azure');
     if (!marketBtn || marketBtn.innerText.trim() !== "Market") {
         log.err("当前不是 Market 模式");
+        return;
     }
     log.ok("Market校验通过");
 
-    // 校验杠杆 ≤ 10X
+    /********************
+     * 校验杠杆 ≤ 10X
+     ********************/
     const leverageBtn = document.querySelector('[data-testid="leverage-button"]');
     if (!leverageBtn) log.err("找不到杠杆按钮");
 
@@ -67,52 +101,18 @@
     const leverage = Number(m[1]);
     if (leverage > 10) {
         log.err(`当前杠杆 ${leverage}X > 10X，终止执行`);
+        return;
     }
 
     log.ok(`当前杠杆 ${leverage}X`);
 
-    // 输入数量
-    const qtyInput = await waitFor(
-        () => document.querySelector('input[data-testid="quantity-input"]'),
-        "数量输入框"
-    );
-
-    // 监听输入框是否显示
-    const qtyParent = qtyInput.closest('div');
-    const qtyContainer = qtyParent?.closest('div'); // 获取父节点，检测是否隐藏
-
-    // 等待输入框父节点变为可见
-    const waitForVisibility = async () => {
-        while (!isVisible(qtyContainer)) {
-            console.log("等待输入框显示...");
-            await sleep(200);
-        }
-    };
-
-    await waitForVisibility();
-
-    // 强制修改输入框值
-    qtyInput.focus();
-    qtyInput.value = "";
-    qtyInput.dispatchEvent(new Event("input", { bubbles: true }));
-
-    qtyInput.value = TRADE_QTY;
-    qtyInput.dispatchEvent(new Event("input", { bubbles: true }));
-
-    // 强制触发 change 事件来确保更新
-    const changeEvent = new Event('change', { bubbles: true });
-    qtyInput.dispatchEvent(changeEvent);
-
-    log.ok(`数量已输入：${TRADE_QTY}`);
-
-    // 判定当前方向
+    /********************
+     * 2. 执行首单
+     ********************/
     const submitBtn = await waitFor(
         () => document.querySelector('button[data-testid="submit-button"]'),
         "提交按钮"
     );
-
-    // 首单（失败则终止）
-    if (!submitBtn) log.err("首单按钮没找到");
 
     const isBuy = submitBtn.innerText.includes("Buy");
     const first = isBuy ? "Buy" : "Sell";
@@ -120,11 +120,12 @@
 
     log.info(`当前方向：${first}`);
 
-
     click(submitBtn);
     log.ok(`${first} 已提交`);
 
-    // 切换方向
+    /********************
+     * 3. 切换方向并执行对冲
+     ********************/
     const switchBtn = await waitFor(
         () => findSideButton(second),
         `切换到 ${second}`
@@ -153,11 +154,6 @@
     }
 
     // 对冲（最终执行）
-    // await sleep(HEDGE_DELAY);
-    // click(hedgeBtn);
-
-    //对冲执行（强制）
-
     log.warn("进入强制对冲模式（首单已提交）");
 
     const MAX_RETRY = 10;
@@ -194,4 +190,5 @@
     log.ok(`对冲完成：${first} → ${second}`);
     log.ok("一键对冲执行成功");
 
-})();
+
+:: contentReference[oaicite: 0]{ index = 0 }
