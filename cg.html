@@ -8,6 +8,7 @@ const qtyInput = await waitFor(
 "数量输入框"
 );
 
+更改后的方案依旧不行，我们现在来排查以下问题，我复制了输入框的祖父节点，html如下：
 
 <div
     class="flex gap-x-1 justify-between border-1 rounded-md items-center relative px-2 py-0.5 min-h-8 h-8 border-transparent bg-transparent max-[450px]:flex-col max-[450px]:items-start w-full">
@@ -18,3 +19,14 @@ const qtyInput = await waitFor(
                 title=""></span></div>
     </div>
 </div>
+
+还有一个问题是这个网站是当页面变窄时，输入框会藏起来，输入框父节点的html变化如下：
+<div class="hidden lg:flex flex-col items-stretch flex-none min-w-[350px] w-[15%] bg-darkblue-400 rounded-sm m-[2px]">
+</div>
+
+帮我排查问题，完善代码
+
+
+<input type="text" max="100" data-testid="sizing-percentage-input" placeholder="0"
+    class="text-xs outline-none bg-transparent transition-all placeholder:text-blackwhite/50 disabled:placeholder:text-blackwhite/50 disabled:text-blackwhite/50 text-end w-full pl-2 py-1 text-blackwhite/80"
+    disabled="">
