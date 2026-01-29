@@ -77,6 +77,20 @@
         "数量输入框"
     );
 
+    // 监听输入框是否显示
+    const qtyParent = qtyInput.closest('div');
+    const qtyContainer = qtyParent?.closest('div'); // 获取父节点，检测是否隐藏
+
+    // 等待输入框父节点变为可见
+    const waitForVisibility = async () => {
+        while (!isVisible(qtyContainer)) {
+            console.log("等待输入框显示...");
+            await sleep(200);
+        }
+    };
+
+    await waitForVisibility();
+
     // 强制修改输入框值
     qtyInput.focus();
     qtyInput.value = "";

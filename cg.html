@@ -1,0 +1,20 @@
+<input type="text" data-testid="quantity-input" placeholder="0"
+    class="text-xs outline-none bg-transparent text-right transition-all text-blackwhite placeholder:text-blackwhite/50 disabled:placeholder:text-blackwhite/50 disabled:text-blackwhite/50 w-full">
+
+
+// 输入数量
+const qtyInput = await waitFor(
+() => document.querySelector('input[data-testid="quantity-input"]'),
+"数量输入框"
+);
+
+
+<div
+    class="flex gap-x-1 justify-between border-1 rounded-md items-center relative px-2 py-0.5 min-h-8 h-8 border-transparent bg-transparent max-[450px]:flex-col max-[450px]:items-start w-full">
+    <div class="flex flex-col flex-1 justify-center items-right min-w-0 w-full"><input type="text"
+            data-testid="quantity-input" placeholder="0"
+            class="text-xs outline-none bg-transparent text-right transition-all text-blackwhite placeholder:text-blackwhite/50 disabled:placeholder:text-blackwhite/50 disabled:text-blackwhite/50 w-full">
+        <div class="text-right"><span data-testid="numeric-input-title" class="text-xs text-blackwhite/50"
+                title=""></span></div>
+    </div>
+</div>
