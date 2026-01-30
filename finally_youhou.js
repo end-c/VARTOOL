@@ -11,7 +11,7 @@
     /********************
      * 配置
      ********************/
-    const TRADE_QTY = "0.001";
+    const TRADE_QTY = 0.005;
     const HEDGE_DELAY = 300;
     const MAX_RETRY = 10;
 
