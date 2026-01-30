@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Omni 一键对冲（热键 + 状态浮窗）
+// @name         VARVAR
 // @namespace    omni-hedge
 // @version      1.0.0
 // @description  Market 模式一键 BUY / SELL 对冲，带失败保护
